@@ -109,10 +109,15 @@ LDFLAGS += -L"/opt/intel/compilers_and_libraries_2016.2.181/linux/compiler/lib/i
 endif
 
 # add unicode support
-CFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
-CXXFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
-LDLIBS += $(shell pkg-config --libs-only-l icu-uc icu-io)
-LDFLAGS += $(shell pkg-config --libs-only-L icu-uc icu-io)
+ifeq (1,0)
+CFLAGS += -DU_CHARSET_IS_UTF8=1
+CXXFLAGS += -DU_CHARSET_IS_UTF8=1
+UNICODE := icu-uc icu-io
+CFLAGS += $(shell pkg-config --cflags-only-I $(UNICODE))
+CXXFLAGS += $(shell pkg-config --cflags-only-I $(UNICODE))
+LDLIBS += $(shell pkg-config --libs-only-l $(UNICODE))
+LDFLAGS += $(shell pkg-config --libs-only-L $(UNICODE))
+endif
 
 EXE := $(basename $(firstword $(SRC)))
 
