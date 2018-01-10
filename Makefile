@@ -108,6 +108,13 @@ LDFLAGS += -L"/opt/intel/compilers_and_libraries_2016.2.181/linux/mkl/lib/intel6
 LDFLAGS += -L"/opt/intel/compilers_and_libraries_2016.2.181/linux/compiler/lib/intel64"
 endif
 
+# ncurses
+NCURSES := ncursesw
+CFLAGS += -DNCURSES_WIDECHAR=1 $(shell pkg-config --cflags-only-I $(NCURSES))
+CXXFLAGS += -DNCURSES_WIDECHAR=1 $(shell pkg-config --cflags-only-I $(NCURSES))
+LDLIBS += $(shell pkg-config --libs-only-l $(NCURSES))
+LDFLAGS += $(shell pkg-config --libs-only-L $(NCURSES))
+
 # add unicode support
 ifeq (1,0)
 CFLAGS += -DU_CHARSET_IS_UTF8=1
