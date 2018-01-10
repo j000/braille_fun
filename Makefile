@@ -83,6 +83,7 @@ LDFLAGS += -s
 ##########
 
 # Intel MKL
+ifeq (1,0)
 CFLAGS += -isystem"/opt/intel/compilers_and_libraries_2016.2.181/linux/mkl/include"
 CXXFLAGS += -isystem"/opt/intel/compilers_and_libraries_2016.2.181/linux/mkl/include"
 LDLIBS += -Wl,--start-group
@@ -105,6 +106,7 @@ LDLIBS += -lm
 LDLIBS += -ldl
 LDFLAGS += -L"/opt/intel/compilers_and_libraries_2016.2.181/linux/mkl/lib/intel64"
 LDFLAGS += -L"/opt/intel/compilers_and_libraries_2016.2.181/linux/compiler/lib/intel64"
+endif
 
 # add unicode support
 CFLAGS += $(shell pkg-config --cflags-only-I icu-uc icu-io)
