@@ -29,23 +29,19 @@ unsigned short screen_get_cy(screen_t screen) {
 /* **** */
 
 screen_t screen_initialise(void) {
-	int max_y = 0, max_x = 0;
-
 	initscr();             /* inicjalizacja ekranu */
 	cbreak();              /* linie na wejściu nie są buforowane */
 	nonl();                /* ncurses zajmuje się enterami */
 	noecho();              /* naciśnięte klawisze nie są wyświetlane */
 	curs_set(FALSE);       /* kursor nie jest wyświetlany */
 
-	getmaxyx(stdscr, max_y, max_x);
-
 	screen_t screen = calloc(1, sizeof(*screen));
 
-	screen->cx = max_x;
-	screen->cy = max_y;
-	screen->dots = calloc(max_x * max_y, sizeof(screen->dots[0]));
-	screen->x = 2 * max_x;
-	screen->y = 4 * max_y;
+	screen->cx = 1;
+	screen->cy = 1;
+	screen->dots = calloc(1, sizeof(screen->dots[0]));
+
+	screen_resize(screen);
 
 	return screen;
 }
@@ -62,6 +58,7 @@ void screen_resize(screen_t screen) {
 	int max_x = 0, max_y = 0;
 
 	getmaxyx(stdscr, max_y, max_x);
+
 	if (screen->cx == max_x && screen->cy == max_y)
 		return;
 
