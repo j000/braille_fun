@@ -58,6 +58,24 @@ void screen_clear(screen_t screen) {
 	memset(screen->dots, 0, screen->cx * screen->cy * sizeof(screen->dots[0]));
 }
 
+void screen_resize(screen_t screen) {
+	int max_x = 0, max_y = 0;
+
+	getmaxyx(stdscr, max_y, max_x);
+	if (screen->cx == max_x && screen->cy == max_y)
+		return;
+
+	screen->cx = max_x;
+	screen->cy = max_y;
+	screen->x = 2 * max_x;
+	screen->y = 4 * max_y;
+	screen->dots =
+		realloc(
+			screen->dots,
+			screen->cx * screen->cy * sizeof(screen->dots[0])
+		);
+}
+
 /* **** */
 
 void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
@@ -72,19 +90,31 @@ void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
 	if (x >= screen_get_x(screen) || y >= screen_get_y(screen))
 		return;
 
-	unsigned char *a = &(screen->dots[(x / 2) + (y / 4) * screen_get_cx(screen)]);
+	unsigned char *a =
+		&(screen->dots[(x / 2) + (y / 4) * screen_get_cx(screen)]);
 
 	x %= 2;
 	y %= 4;
 
-	if (y == 3)
+	if (y == 3) /* kropki 6 i 7 */
 		*a |= (1 << (6 + x));
 	else
 		*a |= (1 << (x * 3 + y));
 }
 
-unsigned char screen_get_dot(screen_t screen, unsigned short x, unsigned short y) {
+unsigned char screen_get_dot(
+	screen_t screen,
+	unsigned short x,
+	unsigned short y
+) {
 	if (x >= screen_get_cx(screen) || y >= screen_get_cy(screen))
 		return 0;
 	return screen->dots[x + y * screen_get_cx(screen)];
+}
+
+void screen_print_dot(const unsigned long int i) {
+	wadd_wch(
+		stdscr,
+		&(cchar_t) {A_NORMAL, { 0x2800ul + i, 0 }, 0 }
+	);
 }

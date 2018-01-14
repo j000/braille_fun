@@ -23,6 +23,12 @@ void screen_clear(screen_t screen);
 
 void screen_add_dot(screen_t screen, unsigned int x, unsigned int y);
 
-unsigned char screen_get_dot(screen_t screen, unsigned short x, unsigned short y);
+unsigned char screen_get_dot(
+	screen_t screen,
+	unsigned short x,
+	unsigned short y
+);
+
+void screen_print_dot(const unsigned long int i);
 
 #endif /* SCREEN_H */

@@ -19,14 +19,6 @@ void sleep_ms(int milliseconds) {
 	nanosleep(&ts, NULL);
 }
 
-void dot(unsigned long int i) {
-	i += 0x2800ul;
-	wadd_wch(
-		stdscr,
-		&(cchar_t) {A_NORMAL, { i, 0 }, 0 }
-	);
-}
-
 typedef struct {
 	double x;
 	double y;
@@ -60,19 +52,24 @@ int main(int argc, char **argv) {
 
 	screen_t screen = screen_initialise();
 
-	wprintw(stdscr, "max: %d %d\n", screen_get_cx(screen), screen_get_cy(screen));
+	wprintw(
+		stdscr,
+		"max: %d %d\n",
+		screen_get_cx(screen),
+		screen_get_cy(screen)
+	);
 
 	initialise_boids(n, a, screen_get_x(screen), screen_get_y(screen));
 	wprintw(stdscr, "dot: %d %d\n", screen_get_x(screen), screen_get_y(screen));
 
-	dot(1);
-	dot(2);
-	dot(4);
-	dot(64);
-	dot(128);
-	dot(32);
-	dot(16);
-	dot(8);
+	screen_print_dot(1);
+	screen_print_dot(2);
+	screen_print_dot(4);
+	screen_print_dot(64);
+	screen_print_dot(128);
+	screen_print_dot(32);
+	screen_print_dot(16);
+	screen_print_dot(8);
 
 	addch('\n');
 
@@ -82,7 +79,7 @@ int main(int argc, char **argv) {
 	for (int i = 0; i <= 0xFF; ++i) {
 		if (i % 8 == 0)
 			addch('\n');
-		dot(i);
+		screen_print_dot(i);
 	}
 
 	refresh();
@@ -111,7 +108,7 @@ int main(int argc, char **argv) {
 				unsigned char tmp = screen_get_dot(screen, ix, iy);
 				if (tmp) {
 					wmove(stdscr, iy, ix);
-					dot(tmp);
+					screen_print_dot(tmp);
 				}
 			}
 		refresh();
