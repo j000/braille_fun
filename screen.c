@@ -76,6 +76,19 @@ void screen_resize(screen_t screen) {
 		);
 }
 
+void screen_draw(screen_t screen) {
+	clear();
+	for (size_t ix = 0; ix < screen_get_cx(screen); ++ix)
+		for (size_t iy = 0; iy < screen_get_cy(screen); ++iy) {
+			unsigned char tmp = screen_get_dot(screen, ix, iy);
+			if (tmp) {
+				move(iy, ix);
+				screen_print_dot(tmp);
+			}
+		}
+	refresh();
+}
+
 void screen_show_test(screen_t screen) {
 	printw(
 		"max: %d %d\n",

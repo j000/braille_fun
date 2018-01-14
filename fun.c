@@ -75,16 +75,7 @@ int main(int argc, char **argv) {
 			a[i].pos.x += a[i].vel.x;
 			a[i].pos.y += a[i].vel.y;
 		}
-		clear();
-		for (size_t ix = 0; ix < screen_get_cx(screen); ++ix)
-			for (size_t iy = 0; iy < screen_get_cy(screen); ++iy) {
-				unsigned char tmp = screen_get_dot(screen, ix, iy);
-				if (tmp) {
-					move(iy, ix);
-					screen_print_dot(tmp);
-				}
-			}
-		refresh();
+		screen_draw(screen);
 	}
 
 	screen_reset();
