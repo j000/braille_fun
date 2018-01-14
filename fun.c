@@ -58,12 +58,12 @@ int main(int argc, char **argv) {
 
 	setlocale(LC_ALL, ""); /* włącz UTF-8 */
 
-	screen_t screen = initialise_screen();
+	screen_t screen = screen_initialise();
 
-	wprintw(stdscr, "max: %d %d\n", get_x(screen), get_y(screen));
+	wprintw(stdscr, "max: %d %d\n", screen_get_x(screen), screen_get_y(screen));
 
-	initialise_boids(n, a, get_x(screen) * 2, get_y(screen) * 4);
-	wprintw(stdscr, "dot: %d %d\n", get_x(screen) * 2, get_y(screen) * 4);
+	initialise_boids(n, a, screen_get_x(screen) * 2, screen_get_y(screen) * 4);
+	wprintw(stdscr, "dot: %d %d\n", screen_get_x(screen) * 2, screen_get_y(screen) * 4);
 
 	dot(1);
 	dot(2);
@@ -92,23 +92,23 @@ int main(int argc, char **argv) {
 
 	wtimeout(stdscr, 30); /* getch nie blokuje */
 	while (ERR == (c = wgetch(stdscr))) {
-		clear_screen(screen);
+		screen_clear(screen);
 		for (size_t i = 0; i < n; ++i) {
 			int tmp_x = floor(a[i].pos.x);
 			int tmp_y = floor(a[i].pos.y);
 
-			add_dot(screen, tmp_x, tmp_y);
-			if (a[i].pos.x >= get_x(screen) * 2 || a[i].pos.x < 0)
+			screen_add_dot(screen, tmp_x, tmp_y);
+			if (a[i].pos.x >= screen_get_x(screen) * 2 || a[i].pos.x < 0)
 				a[i].vel.x *= -1;
-			if (a[i].pos.y >= get_y(screen) * 4 || a[i].pos.y < 0)
+			if (a[i].pos.y >= screen_get_y(screen) * 4 || a[i].pos.y < 0)
 				a[i].vel.y *= -1;
 			a[i].pos.x += a[i].vel.x;
 			a[i].pos.y += a[i].vel.y;
 		}
 		clear();
-		for (size_t ix = 0; ix < get_x(screen); ++ix)
-			for (size_t iy = 0; iy < get_y(screen); ++iy) {
-				unsigned char tmp = get_dot(screen, ix, iy);
+		for (size_t ix = 0; ix < screen_get_x(screen); ++ix)
+			for (size_t iy = 0; iy < screen_get_y(screen); ++iy) {
+				unsigned char tmp = screen_get_dot(screen, ix, iy);
 				if (tmp) {
 					wmove(stdscr, iy, ix);
 					dot(tmp);
@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
 		refresh();
 	}
 
-	reset_screen();
+	screen_reset();
 
 	return EXIT_SUCCESS;
 }

@@ -9,17 +9,17 @@ struct screen_s {
 	unsigned char *dots;
 };
 
-unsigned short get_x(screen_t screen) {
+unsigned short screen_get_x(screen_t screen) {
 	return screen->x;
 }
 
-unsigned short get_y(screen_t screen) {
+unsigned short screen_get_y(screen_t screen) {
 	return screen->y;
 }
 
 /* **** */
 
-screen_t initialise_screen(void) {
+screen_t screen_initialise(void) {
 	int max_y = 0, max_x = 0;
 
 	initscr();             /* inicjalizacja ekranu */
@@ -39,18 +39,18 @@ screen_t initialise_screen(void) {
 	return screen;
 }
 
-void reset_screen(void) {
+void screen_reset(void) {
 	endwin();              /* przywróć terminal */
 }
 
-void clear_screen(screen_t screen) {
-	for (size_t i = 0; i < get_x(screen) * get_y(screen); ++i)
+void screen_clear(screen_t screen) {
+	for (size_t i = 0; i < screen_get_x(screen) * screen_get_y(screen); ++i)
 		screen->dots[i] = 0;
 }
 
 /* **** */
 
-void add_dot(screen_t screen, unsigned int x, unsigned int y) {
+void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
 	/*
 	 * Braille:
 	 * 1 4       1   8
@@ -59,10 +59,10 @@ void add_dot(screen_t screen, unsigned int x, unsigned int y) {
 	 * 7 8      64 128
 	 */
 
-	if (x >= get_x(screen) * 2 || y >= get_y(screen) * 4)
+	if (x >= screen_get_x(screen) * 2 || y >= screen_get_y(screen) * 4)
 		return;
 
-	unsigned char *a = &(screen->dots[get_y(screen) * (x / 2) + (y / 4)]);
+	unsigned char *a = &(screen->dots[screen_get_y(screen) * (x / 2) + (y / 4)]);
 
 	x %= 2;
 	y %= 4;
@@ -73,8 +73,8 @@ void add_dot(screen_t screen, unsigned int x, unsigned int y) {
 		*a |= (1 << (x * 3 + y));
 }
 
-unsigned char get_dot(screen_t screen, unsigned short x, unsigned short y) {
-	if (x >= get_x(screen) || y >= get_y(screen))
+unsigned char screen_get_dot(screen_t screen, unsigned short x, unsigned short y) {
+	if (x >= screen_get_x(screen) || y >= screen_get_y(screen))
 		return 0;
-	return screen->dots[get_y(screen) * x + y];
+	return screen->dots[screen_get_y(screen) * x + y];
 }
