@@ -7,6 +7,7 @@
 #include <locale.h> /* setlocale */
 #include <curses.h> /* drawing */
 
+#include "screen.h"
 #include "random.h"
 
 void sleep_ms(int milliseconds) {
@@ -51,13 +52,7 @@ void initialise_boids(const size_t n, boid a[n], int x, int y) {
 
 /* **** */
 
-struct screen {
-	unsigned short x;
-	unsigned short y;
-	unsigned char dots[];
-};
-
-void add_dot(struct screen *screen, unsigned int x, unsigned int y) {
+void add_dot(screen_t screen, unsigned int x, unsigned int y) {
 	/*
 	 * Braille:
 	 * 1 4       1   8
@@ -81,7 +76,7 @@ void add_dot(struct screen *screen, unsigned int x, unsigned int y) {
 }
 
 unsigned char get_dot(
-	struct screen *screen,
+	screen_t screen,
 	unsigned short x,
 	unsigned short y
 ) {
@@ -90,7 +85,7 @@ unsigned char get_dot(
 	return screen->dots[screen->y * x + y];
 }
 
-void clear_screen(struct screen *screen) {
+void clear_screen(screen_t screen) {
 	for (size_t i = 0; i < screen->x * screen->y; ++i)
 		screen->dots[i] = 0;
 }
@@ -121,7 +116,7 @@ int main(int argc, char **argv) {
 
 	getmaxyx(stdscr, max_y, max_x);
 
-	struct screen *screen =
+	screen_t screen =
 		malloc(sizeof(*screen) + max_x * max_y * sizeof(screen->dots[0]));
 
 	screen->x = max_x;
