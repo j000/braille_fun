@@ -3,12 +3,11 @@
 #include <stdlib.h> /* rand, srand, RAND_MAX */
 
 /**
- * Zwróć wartość [0,1]
- * TODO: może [0,1)?
+ * Zwróć wartość [0,1)
  */
 static double generate_random(void) {
 	/* TODO: znajdź lepsze rozwiązanie */
-	return ((double)rand()) / RAND_MAX;
+	return ((double)rand()) / (1. + RAND_MAX);
 }
 
 static double init_random(void) {
