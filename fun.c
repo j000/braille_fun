@@ -52,83 +52,18 @@ void initialise_boids(const size_t n, boid a[n], int x, int y) {
 
 /* **** */
 
-void add_dot(screen_t screen, unsigned int x, unsigned int y) {
-	/*
-	 * Braille:
-	 * 1 4       1   8
-	 * 2 5  =>   2  16
-	 * 3 6       4  32
-	 * 7 8      64 128
-	 */
-
-	if (x >= screen->x * 2 || y >= screen->y * 4)
-		return;
-
-	unsigned char *a = &(screen->dots[screen->y * (x / 2) + (y / 4)]);
-
-	x %= 2;
-	y %= 4;
-
-	if (y == 3)
-		*a |= (1 << (6 + x));
-	else
-		*a |= (1 << (x * 3 + y));
-}
-
-unsigned char get_dot(
-	screen_t screen,
-	unsigned short x,
-	unsigned short y
-) {
-	if (x >= screen->x || y >= screen->y)
-		return 0;
-	return screen->dots[screen->y * x + y];
-}
-
-void clear_screen(screen_t screen) {
-	for (size_t i = 0; i < screen->x * screen->y; ++i)
-		screen->dots[i] = 0;
-}
-
-void initialise_screen(void) {
-	setlocale(LC_ALL, ""); /* włącz UTF-8 */
-
-	initscr();             /* inicjalizacja ekranu */
-	cbreak();              /* linie na wejściu nie są buforowane */
-	nonl();                /* ncurses zajmuje się enterami */
-	noecho();              /* naciśnięte klawisze nie są wyświetlane */
-	curs_set(FALSE);       /* kursor nie jest wyświetlany */
-}
-
-void reset_screen(void) {
-	endwin();              /* przywróć terminal */
-}
-
-/* **** */
-
 int main(int argc, char **argv) {
-	int max_y = 0, max_x = 0;
-
 	const size_t n = 400;
 	boid *a = calloc(n, sizeof(*a));
 
-	initialise_screen();
+	setlocale(LC_ALL, ""); /* włącz UTF-8 */
 
-	getmaxyx(stdscr, max_y, max_x);
+	screen_t screen = initialise_screen();
 
-	screen_t screen =
-		malloc(sizeof(*screen) + max_x * max_y * sizeof(screen->dots[0]));
+	wprintw(stdscr, "max: %d %d\n", get_x(screen), get_y(screen));
 
-	screen->x = max_x;
-	screen->y = max_y;
-	clear_screen(screen);
-
-	wprintw(stdscr, "max: %d %d\n", max_x, max_y);
-
-	max_x *= 2;
-	max_y *= 4;
-	initialise_boids(n, a, max_x, max_y);
-	wprintw(stdscr, "dot: %d %d\n", max_x - 1, max_y - 1);
+	initialise_boids(n, a, get_x(screen) * 2, get_y(screen) * 4);
+	wprintw(stdscr, "dot: %d %d\n", get_x(screen) * 2, get_y(screen) * 4);
 
 	dot(1);
 	dot(2);
@@ -151,28 +86,7 @@ int main(int argc, char **argv) {
 	}
 
 	refresh();
-	getch();               /* poczekaj na klawisz */
-
-	unsigned char simple[] = {
-		1,
-		2,
-		4,
-		64,
-		128,
-		32,
-		16,
-		8
-	};
-	unsigned char circle[][2] = {
-		{ 8, 0 },
-		{ 2, 0 },
-		{ 4, 0 },
-		{ 128, 0 },
-		{ 0, 64 },
-		{ 0, 32 },
-		{ 0, 16 },
-		{ 0, 1 }
-	};
+	getch();              /* poczekaj na klawisz */
 
 	char c = 0;
 
@@ -184,16 +98,16 @@ int main(int argc, char **argv) {
 			int tmp_y = floor(a[i].pos.y);
 
 			add_dot(screen, tmp_x, tmp_y);
-			if (a[i].pos.x >= max_x || a[i].pos.x < 0)
+			if (a[i].pos.x >= get_x(screen) * 2 || a[i].pos.x < 0)
 				a[i].vel.x *= -1;
-			if (a[i].pos.y >= max_y || a[i].pos.y < 0)
+			if (a[i].pos.y >= get_y(screen) * 4 || a[i].pos.y < 0)
 				a[i].vel.y *= -1;
 			a[i].pos.x += a[i].vel.x;
 			a[i].pos.y += a[i].vel.y;
 		}
 		clear();
-		for (size_t ix = 0; ix < screen->x; ++ix)
-			for (size_t iy = 0; iy < screen->y; ++iy) {
+		for (size_t ix = 0; ix < get_x(screen); ++ix)
+			for (size_t iy = 0; iy < get_y(screen); ++iy) {
 				unsigned char tmp = get_dot(screen, ix, iy);
 				if (tmp) {
 					wmove(stdscr, iy, ix);
