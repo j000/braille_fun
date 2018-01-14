@@ -1,4 +1,4 @@
-SRC ?= fun.c
+SRC ?= fun.c random.c random.h
 
 SRCDIR ?= .
 OBJDIR ?= .objdir

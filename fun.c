@@ -7,6 +7,8 @@
 #include <locale.h> /* setlocale */
 #include <curses.h> /* drawing */
 
+#include "random.h"
+
 void sleep_ms(int milliseconds) {
 	struct timespec ts = {
 		.tv_sec = milliseconds / 1000,
@@ -33,15 +35,6 @@ typedef struct {
 	vector pos;
 	vector vel;
 } boid;
-
-/**
- * Zwróć wartość [0,1]
- * TODO: może [0,1)?
- */
-double get_random(void) {
-	/* TODO: znajdź lepsze rozwiązanie */
-	return ((double)rand()) / RAND_MAX;
-}
 
 void initialise_boids(const size_t n, boid a[n], int x, int y) {
 	for (size_t i = 0; i < n; ++i) {
