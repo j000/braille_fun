@@ -72,7 +72,7 @@ void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
 	if (x >= screen_get_x(screen) || y >= screen_get_y(screen))
 		return;
 
-	unsigned char *a = &(screen->dots[screen_get_cy(screen) * (x / 2) + (y / 4)]);
+	unsigned char *a = &(screen->dots[(x / 2) + (y / 4) * screen_get_cx(screen)]);
 
 	x %= 2;
 	y %= 4;
@@ -86,5 +86,5 @@ void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
 unsigned char screen_get_dot(screen_t screen, unsigned short x, unsigned short y) {
 	if (x >= screen_get_cx(screen) || y >= screen_get_cy(screen))
 		return 0;
-	return screen->dots[screen_get_cy(screen) * x + y];
+	return screen->dots[x + y * screen_get_cx(screen)];
 }
