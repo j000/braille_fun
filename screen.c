@@ -1,6 +1,7 @@
 #include "screen.h"
 
 #include <stdlib.h>
+#include <string.h> /* memset */
 #include <curses.h> /* drawing */
 
 struct screen_s {
@@ -54,8 +55,7 @@ void screen_reset(void) {
 }
 
 void screen_clear(screen_t screen) {
-	for (size_t i = 0; i < screen_get_cx(screen) * screen_get_cy(screen); ++i)
-		screen->dots[i] = 0;
+	memset(screen->dots, 0, screen->cx * screen->cy * sizeof(screen->dots[0]));
 }
 
 /* **** */
