@@ -7,6 +7,10 @@ unsigned short screen_get_x(screen_t screen);
 
 unsigned short screen_get_y(screen_t screen);
 
+unsigned short screen_get_cx(screen_t screen);
+
+unsigned short screen_get_cy(screen_t screen);
+
 /* **** */
 
 screen_t screen_initialise(void);

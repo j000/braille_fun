@@ -60,10 +60,10 @@ int main(int argc, char **argv) {
 
 	screen_t screen = screen_initialise();
 
-	wprintw(stdscr, "max: %d %d\n", screen_get_x(screen), screen_get_y(screen));
+	wprintw(stdscr, "max: %d %d\n", screen_get_cx(screen), screen_get_cy(screen));
 
-	initialise_boids(n, a, screen_get_x(screen) * 2, screen_get_y(screen) * 4);
-	wprintw(stdscr, "dot: %d %d\n", screen_get_x(screen) * 2, screen_get_y(screen) * 4);
+	initialise_boids(n, a, screen_get_x(screen), screen_get_y(screen));
+	wprintw(stdscr, "dot: %d %d\n", screen_get_x(screen), screen_get_y(screen));
 
 	dot(1);
 	dot(2);
@@ -98,16 +98,16 @@ int main(int argc, char **argv) {
 			int tmp_y = floor(a[i].pos.y);
 
 			screen_add_dot(screen, tmp_x, tmp_y);
-			if (a[i].pos.x >= screen_get_x(screen) * 2 || a[i].pos.x < 0)
+			if (a[i].pos.x >= screen_get_x(screen) || a[i].pos.x < 0)
 				a[i].vel.x *= -1;
-			if (a[i].pos.y >= screen_get_y(screen) * 4 || a[i].pos.y < 0)
+			if (a[i].pos.y >= screen_get_y(screen) || a[i].pos.y < 0)
 				a[i].vel.y *= -1;
 			a[i].pos.x += a[i].vel.x;
 			a[i].pos.y += a[i].vel.y;
 		}
 		clear();
-		for (size_t ix = 0; ix < screen_get_x(screen); ++ix)
-			for (size_t iy = 0; iy < screen_get_y(screen); ++iy) {
+		for (size_t ix = 0; ix < screen_get_cx(screen); ++ix)
+			for (size_t iy = 0; iy < screen_get_cy(screen); ++iy) {
 				unsigned char tmp = screen_get_dot(screen, ix, iy);
 				if (tmp) {
 					wmove(stdscr, iy, ix);

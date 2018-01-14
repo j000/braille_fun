@@ -4,8 +4,8 @@
 #include <curses.h> /* drawing */
 
 struct screen_s {
-	unsigned short x;
-	unsigned short y;
+	unsigned short x, y;
+	unsigned short cx, cy;
 	unsigned char *dots;
 };
 
@@ -15,6 +15,14 @@ unsigned short screen_get_x(screen_t screen) {
 
 unsigned short screen_get_y(screen_t screen) {
 	return screen->y;
+}
+
+unsigned short screen_get_cx(screen_t screen) {
+	return screen->cx;
+}
+
+unsigned short screen_get_cy(screen_t screen) {
+	return screen->cy;
 }
 
 /* **** */
@@ -32,9 +40,11 @@ screen_t screen_initialise(void) {
 
 	screen_t screen = calloc(1, sizeof(*screen));
 
-	screen->x = max_x;
-	screen->y = max_y;
+	screen->cx = max_x;
+	screen->cy = max_y;
 	screen->dots = calloc(max_x * max_y, sizeof(screen->dots[0]));
+	screen->x = 2 * max_x;
+	screen->y = 4 * max_y;
 
 	return screen;
 }
@@ -44,7 +54,7 @@ void screen_reset(void) {
 }
 
 void screen_clear(screen_t screen) {
-	for (size_t i = 0; i < screen_get_x(screen) * screen_get_y(screen); ++i)
+	for (size_t i = 0; i < screen_get_cx(screen) * screen_get_cy(screen); ++i)
 		screen->dots[i] = 0;
 }
 
@@ -59,10 +69,10 @@ void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
 	 * 7 8      64 128
 	 */
 
-	if (x >= screen_get_x(screen) * 2 || y >= screen_get_y(screen) * 4)
+	if (x >= screen_get_x(screen) || y >= screen_get_y(screen))
 		return;
 
-	unsigned char *a = &(screen->dots[screen_get_y(screen) * (x / 2) + (y / 4)]);
+	unsigned char *a = &(screen->dots[screen_get_cy(screen) * (x / 2) + (y / 4)]);
 
 	x %= 2;
 	y %= 4;
@@ -74,7 +84,7 @@ void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
 }
 
 unsigned char screen_get_dot(screen_t screen, unsigned short x, unsigned short y) {
-	if (x >= screen_get_x(screen) || y >= screen_get_y(screen))
+	if (x >= screen_get_cx(screen) || y >= screen_get_cy(screen))
 		return 0;
-	return screen->dots[screen_get_y(screen) * x + y];
+	return screen->dots[screen_get_cy(screen) * x + y];
 }
