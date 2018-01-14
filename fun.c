@@ -60,8 +60,8 @@ int main(int argc, char **argv) {
 
 	char c = 0;
 
-	wtimeout(stdscr, 30); /* getch nie blokuje */
-	while (ERR == (c = wgetch(stdscr))) {
+	timeout(30); /* getch nie blokuje */
+	while (ERR == (c = getch())) {
 		screen_clear(screen);
 		for (size_t i = 0; i < n; ++i) {
 			int tmp_x = floor(a[i].pos.x);
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 			for (size_t iy = 0; iy < screen_get_cy(screen); ++iy) {
 				unsigned char tmp = screen_get_dot(screen, ix, iy);
 				if (tmp) {
-					wmove(stdscr, iy, ix);
+					move(iy, ix);
 					screen_print_dot(tmp);
 				}
 			}

@@ -149,8 +149,5 @@ unsigned char screen_get_dot(
 }
 
 void screen_print_dot(const unsigned long int i) {
-	wadd_wch(
-		stdscr,
-		&(cchar_t) {A_NORMAL, { 0x2800ul + i, 0 }, 0 }
-	);
+	add_wch(&((cchar_t) {A_NORMAL, { 0x2800ul + i, 0 }, 0 }));
 }
