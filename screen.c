@@ -76,6 +76,42 @@ void screen_resize(screen_t screen) {
 		);
 }
 
+void screen_show_test(screen_t screen) {
+	printw(
+		"max: %d %d\n",
+		screen_get_cx(screen),
+		screen_get_cy(screen)
+	);
+
+	printw(
+		"dots: %d %d\n",
+		screen_get_x(screen),
+		screen_get_y(screen)
+	);
+
+	screen_print_dot(1);
+	screen_print_dot(2);
+	screen_print_dot(4);
+	screen_print_dot(64);
+	screen_print_dot(128);
+	screen_print_dot(32);
+	screen_print_dot(16);
+	screen_print_dot(8);
+
+	addch('\n');
+
+	for (int i = 0; i < 8; ++i)
+		addch('0' + i);
+
+	for (int i = 0; i <= 0xFF; ++i) {
+		if (i % 8 == 0)
+			addch('\n');
+		screen_print_dot(i);
+	}
+
+	refresh();
+}
+
 /* **** */
 
 void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {

@@ -19,6 +19,8 @@ void screen_reset(void);
 
 void screen_clear(screen_t screen);
 
+void screen_show_test(screen_t screen);
+
 /* **** */
 
 void screen_add_dot(screen_t screen, unsigned int x, unsigned int y);

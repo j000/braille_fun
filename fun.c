@@ -52,37 +52,10 @@ int main(int argc, char **argv) {
 
 	screen_t screen = screen_initialise();
 
-	wprintw(
-		stdscr,
-		"max: %d %d\n",
-		screen_get_cx(screen),
-		screen_get_cy(screen)
-	);
-
 	initialise_boids(n, a, screen_get_x(screen), screen_get_y(screen));
-	wprintw(stdscr, "dot: %d %d\n", screen_get_x(screen), screen_get_y(screen));
 
-	screen_print_dot(1);
-	screen_print_dot(2);
-	screen_print_dot(4);
-	screen_print_dot(64);
-	screen_print_dot(128);
-	screen_print_dot(32);
-	screen_print_dot(16);
-	screen_print_dot(8);
+	screen_show_test(screen);
 
-	addch('\n');
-
-	for (int i = 0; i < 8; ++i)
-		addch('0' + i);
-
-	for (int i = 0; i <= 0xFF; ++i) {
-		if (i % 8 == 0)
-			addch('\n');
-		screen_print_dot(i);
-	}
-
-	refresh();
 	getch();              /* poczekaj na klawisz */
 
 	char c = 0;
