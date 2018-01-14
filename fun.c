@@ -1,6 +1,7 @@
 #define _XOPEN_SOURCE 700
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <math.h>
 #include <assert.h> /* assert */
 #include <time.h>   /* nanosleep */
@@ -55,13 +56,23 @@ int main(int argc, char **argv) {
 	initialise_boids(n, a, screen_get_x(screen), screen_get_y(screen));
 
 	screen_show_test(screen);
+	getch();               /* poczekaj na klawisz */
 
-	getch();              /* poczekaj na klawisz */
+	timeout(30);           /* getch nie blokuje */
 
-	char c = 0;
+	bool keep_looping = true;
 
-	timeout(30); /* getch nie blokuje */
-	while (ERR == (c = getch())) {
+	while (keep_looping) {
+		switch (getch()) {
+		case KEY_RESIZE:
+			screen_resize(screen);
+			break;
+		case ERR:
+			break;
+		default:
+			keep_looping = false;
+		}
+
 		screen_clear(screen);
 		for (size_t i = 0; i < n; ++i) {
 			int tmp_x = floor(a[i].pos.x);
