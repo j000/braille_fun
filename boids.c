@@ -57,11 +57,20 @@ void boids_update(screen_t screen, boids_model boids) {
 		int tmp_y = floor(b->pos.y);
 
 		screen_add_dot(screen, tmp_x, tmp_y);
-		if (b->pos.x >= screen_get_x(screen) || b->pos.x < 0)
-			b->vel.x *= -1;
-		if (b->pos.y >= screen_get_y(screen) || b->pos.y < 0)
-			b->vel.y *= -1;
+
+		/* ruch */
 		b->pos.x += b->vel.x;
 		b->pos.y += b->vel.y;
+		/* odbicia */
+		if ((b->pos.x >= screen_get_x(screen) && b->vel.x > 0) ||
+			(b->pos.x < 0 && b->vel.x < 0)) {
+			b->vel.x *= -1.;
+			b->pos.x += 2 * b->vel.x;
+		}
+		if ((b->pos.y >= screen_get_y(screen) && b->vel.y > 0) ||
+			(b->pos.y < 0 && b->vel.y < 0)) {
+			b->vel.y *= -1.;
+			b->pos.y += 2 * b->vel.y;
+		}
 	}
 }
