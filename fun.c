@@ -3,24 +3,11 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
-#include <assert.h> /* assert */
-#include <time.h>   /* nanosleep */
-#include <locale.h> /* setlocale */
-#include <curses.h> /* drawing */
+#include <locale.h>        /* setlocale */
+#include <curses.h>        /* drawing */
 
 #include "screen.h"
 #include "boids.h"
-
-void sleep_ms(int milliseconds) {
-	struct timespec ts = {
-		.tv_sec = milliseconds / 1000,
-		.tv_nsec = (milliseconds % 1000) * 1000000
-	};
-
-	nanosleep(&ts, NULL);
-}
-
-/* **** */
 
 int main(int argc, char **argv) {
 	setlocale(LC_ALL, ""); /* włącz UTF-8 */
