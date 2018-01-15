@@ -1,0 +1,67 @@
+#include "boids.h"
+
+#include <math.h>
+
+#include "random.h"
+
+/* **** */
+
+typedef struct {
+	double x;
+	double y;
+} vector;
+
+typedef struct {
+	vector pos;
+	vector vel;
+} boid;
+
+struct boids_model_s {
+	size_t ilosc;
+	boid *array;
+};
+
+/* **** */
+
+static void initialise_boids(const size_t n, boid a[n], int x, int y) {
+	for (size_t i = 0; i < n; ++i) {
+		a[i].pos = (vector){
+			.x = get_random() * x,
+			.y = get_random() * y
+		};
+		a[i].vel = (vector){
+			.x = -1. + get_random() * 2,
+			.y = -1. + get_random() * 2
+		};
+	}
+}
+
+boids_model boids_new_model(screen_t screen) {
+	boids_model boids = calloc(1, sizeof(boids));
+
+	boids->ilosc = 1600;
+	boids->array = calloc(boids->ilosc, sizeof(*(boids->array)));
+	initialise_boids(
+		boids->ilosc,
+		boids->array,
+		screen_get_x(screen) + 1,
+		screen_get_y(screen) + 1
+	);
+	return boids;
+}
+
+void boids_update(screen_t screen, boids_model boids) {
+	for (size_t i = 0; i < boids->ilosc; ++i) {
+		boid *b = &boids->array[i];
+		int tmp_x = floor(b->pos.x);
+		int tmp_y = floor(b->pos.y);
+
+		screen_add_dot(screen, tmp_x, tmp_y);
+		if (b->pos.x >= screen_get_x(screen) || b->pos.x < 0)
+			b->vel.x *= -1;
+		if (b->pos.y >= screen_get_y(screen) || b->pos.y < 0)
+			b->vel.y *= -1;
+		b->pos.x += b->vel.x;
+		b->pos.y += b->vel.y;
+	}
+}
