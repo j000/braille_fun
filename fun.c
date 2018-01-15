@@ -10,16 +10,23 @@
 #include "boids.h"
 
 int main(int argc, char **argv) {
+	/* parametry */
+	bool use_braille = true;
+	int fps = 25;
+
+	/* **** */
+	const int delay = floor(1000. / fps);
+
 	setlocale(LC_ALL, ""); /* włącz UTF-8 */
 
-	screen_t screen = screen_initialise(true);
+	screen_t screen = screen_initialise(use_braille);
 
 	boids_model boids = boids_new_model(screen);
 
 	screen_show_test(screen);
 	getch();               /* poczekaj na klawisz */
 
-	timeout(30);           /* getch nie blokuje */
+	timeout(delay);        /* getch nie blokuje */
 
 	bool keep_looping = true;
 
