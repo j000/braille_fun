@@ -12,7 +12,7 @@
 int main(int argc, char **argv) {
 	setlocale(LC_ALL, ""); /* włącz UTF-8 */
 
-	screen_t screen = screen_initialise();
+	screen_t screen = screen_initialise(true);
 
 	boids_model boids = boids_new_model(screen);
 

@@ -7,6 +7,7 @@
 struct screen_s {
 	unsigned short x, y;
 	unsigned short cx, cy;
+	bool use_braille;
 	unsigned char *dots;
 };
 
@@ -26,9 +27,13 @@ unsigned short screen_get_cy(screen_t screen) {
 	return screen->cy;
 }
 
+bool screen_get_braille(screen_t screen) {
+	return screen->use_braille;
+}
+
 /* **** */
 
-screen_t screen_initialise(void) {
+screen_t screen_initialise(bool use_braille) {
 	initscr();             /* inicjalizacja ekranu */
 	cbreak();              /* linie na wejściu nie są buforowane */
 	nonl();                /* ncurses zajmuje się enterami */
@@ -40,6 +45,7 @@ screen_t screen_initialise(void) {
 	screen->cx = 1;
 	screen->cy = 1;
 	screen->dots = calloc(1, sizeof(screen->dots[0]));
+	screen->use_braille = use_braille;
 
 	screen_resize(screen);
 
@@ -64,8 +70,13 @@ void screen_resize(screen_t screen) {
 
 	screen->cx = max_x;
 	screen->cy = max_y;
-	screen->x = 2 * max_x;
-	screen->y = 4 * max_y;
+	if (screen->use_braille) {
+		screen->x = 2 * max_x;
+		screen->y = 4 * max_y;
+	} else {
+		screen->x = max_x;
+		screen->y = max_y;
+	}
 	screen->dots =
 		realloc(
 			screen->dots,
@@ -80,7 +91,10 @@ void screen_draw(screen_t screen) {
 			unsigned char tmp = screen_get_dot(screen, ix, iy);
 			if (tmp) {
 				move(iy, ix);
-				screen_print_dot(tmp);
+				if (screen_get_braille(screen))
+					screen_print_dot(tmp);
+				else
+					addch('*');
 			}
 		}
 	refresh();
@@ -136,16 +150,20 @@ void screen_add_dot(screen_t screen, unsigned int x, unsigned int y) {
 	if (x >= screen_get_x(screen) || y >= screen_get_y(screen))
 		return;
 
-	unsigned char *a =
-		&(screen->dots[(x / 2) + (y / 4) * screen_get_cx(screen)]);
+	if (screen_get_braille(screen)) {
+		unsigned char *a =
+			&(screen->dots[(x / 2) + (y / 4) * screen_get_cx(screen)]);
 
-	x %= 2;
-	y %= 4;
+		x %= 2;
+		y %= 4;
 
-	if (y == 3) /* kropki 6 i 7 */
-		*a |= (1 << (6 + x));
-	else
-		*a |= (1 << (x * 3 + y));
+		if (y == 3) /* kropki 6 i 7 */
+			*a |= (1 << (6 + x));
+		else
+			*a |= (1 << (x * 3 + y));
+	} else {
+		screen->dots[x + y * screen_get_cx(screen)] |= '1';
+	}
 }
 
 unsigned char screen_get_dot(

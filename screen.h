@@ -1,6 +1,8 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include <stdbool.h>
+
 typedef struct screen_s *screen_t;
 
 unsigned short screen_get_x(screen_t screen);
@@ -11,9 +13,11 @@ unsigned short screen_get_cx(screen_t screen);
 
 unsigned short screen_get_cy(screen_t screen);
 
+bool screen_get_braille(screen_t screen);
+
 /* **** */
 
-screen_t screen_initialise(void);
+screen_t screen_initialise(bool use_braille);
 
 void screen_reset(void);
 
