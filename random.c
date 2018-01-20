@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 700
 #include "random.h"
 
 #include <stdlib.h> /* rand, srand, RAND_MAX */

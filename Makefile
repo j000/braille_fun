@@ -110,8 +110,8 @@ endif
 
 # ncurses
 NCURSES := ncursesw
-CFLAGS += -DNCURSES_WIDECHAR=1 $(shell pkg-config --cflags-only-I $(NCURSES))
-CXXFLAGS += -DNCURSES_WIDECHAR=1 $(shell pkg-config --cflags-only-I $(NCURSES))
+CFLAGS += $(shell pkg-config --cflags-only-I $(NCURSES))
+CXXFLAGS += $(shell pkg-config --cflags-only-I $(NCURSES))
 LDLIBS += $(shell pkg-config --libs-only-l $(NCURSES))
 LDFLAGS += $(shell pkg-config --libs-only-L $(NCURSES))
 

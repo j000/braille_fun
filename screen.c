@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 700
 #include "screen.h"
 
 #include <stdlib.h>
