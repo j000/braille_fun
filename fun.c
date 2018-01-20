@@ -46,6 +46,7 @@ int main(int argc, char **argv) {
 		screen_draw(screen);
 	}
 
+	boids_destroy(&boids);
 	screen_reset();
 
 	return EXIT_SUCCESS;

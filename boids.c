@@ -51,6 +51,12 @@ boids_model boids_new_model(screen_t screen) {
 	return boids;
 }
 
+void boids_destroy(boids_model *boids) {
+	free((*boids)->array);
+	free((*boids));
+	*boids = NULL;
+}
+
 void boids_update(screen_t screen, boids_model boids) {
 	for (size_t i = 0; i < boids->ilosc; ++i) {
 		boid *b = &boids->array[i];
