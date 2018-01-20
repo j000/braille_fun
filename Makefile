@@ -128,7 +128,7 @@ endif
 
 EXE := $(basename $(firstword $(SRC)))
 
-OBJ := $(foreach src,$(SRC),$(OBJDIR)/$(src).o)
+OBJ := $(foreach src,$(filter-out %.h,$(SRC)),$(OBJDIR)/$(src).o)
 
 DEP := $(foreach src,$(SRC),$(DEPDIR)/$(src).d)
 
