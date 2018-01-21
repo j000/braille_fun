@@ -61,7 +61,7 @@ CWARNINGS += -Werror=strict-prototypes
 # this probably should be enabled only in bigger projects
 #CWARNINGS += -Wmissing-prototypes
 
-MARCH := -mmmx -msse -msse2 -msse3 -mssse3 -mlong-double-64 -mno-fxsr -mno-cx16
+MARCH := -mmmx -msse -msse2 -msse3 -mssse3  -mno-fxsr -mno-cx16 #-mlong-double-64
 MARCH += -mtune=core2
 
 # standards (ANSI C, ANSI C++)
