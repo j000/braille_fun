@@ -159,6 +159,7 @@ static void initialise_boids(const size_t n, boid a[n], int x, int y) {
 			.y = -1. + get_random() * 2
 		};
 		a[i].acc = (vector){0 };
+		a[i].wander_angle = get_random() * 2 * M_PI;
 	}
 }
 
