@@ -103,18 +103,28 @@ static size_t partition(boid a[], size_t lo, size_t hi, comp compare) {
 	}
 }
 
-static void quicksort(boid a[], size_t lo, size_t hi, comp compare) {
+static void quicksort(
+	boid a[],
+	size_t lo,
+	size_t hi,
+	signed char limit,
+	comp compare
+) {
 	if (lo >= hi)
 		return;
-	if (lo + 16 >= hi) {
+	if (lo + 16 >= hi || limit <= 0) {
 		insertion_sort(a, lo, hi, compare);
 		return;
 	}
 
 	size_t p = partition(a, lo, hi, compare);
 
-	quicksort(a, lo, p, compare);
-	quicksort(a, p + 1, hi, compare);
+	quicksort(a, lo, p, limit - 1, compare);
+	quicksort(a, p + 1, hi, limit - 1, compare);
+}
+
+static void sort(boid a[], size_t size, comp compare) {
+	quicksort(a, 0, size - 1, 16, compare);
 }
 
 /* **** */
@@ -153,7 +163,7 @@ void boids_destroy(boids_model *boids) {
 }
 
 void boids_update(screen_t screen, boids_model boids) {
-	quicksort(boids->array, 0, boids->n - 1, compare_x);
+	sort(boids->array, boids->n, compare_x);
 
 	for (size_t i = 0; i < boids->n; ++i) {
 		boid *b = &boids->array[i];
