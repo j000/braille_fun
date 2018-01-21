@@ -24,6 +24,101 @@ struct boids_model_s {
 
 /* **** */
 
+typedef int (*comp)(const void *, const void *);
+
+static void swap(boid *a, boid *b) {
+	boid t;
+
+	t = *a;
+	*a = *b;
+	*b = t;
+}
+
+static int compare_x(const void *_a, const void *_b) {
+	const boid *a = (const boid *)_a;
+	const boid *b = (const boid *)_b;
+
+	if (a->pos.x > b->pos.x)
+		return 1;
+	if (a->pos.x < b->pos.x)
+		return -1;
+	if (a->pos.y > b->pos.y)
+		return 1;
+	if (a->pos.y < b->pos.y)
+		return -1;
+	return 0;
+}
+
+static void median_of_3(boid *a, boid *b, boid *c, comp compare) {
+	if (compare(a, b) > 0)
+		swap(a, b);
+	if (compare(a, c) < 0)
+		swap(a, c);
+	if (compare(b, c) > 0)
+		swap(b, c);
+}
+
+static void insertion_sort(
+	boid a[],
+	const size_t lo,
+	const size_t hi,
+	comp compare
+) {
+	size_t i = lo + 1;
+
+	while (i <= hi) {
+		boid x = a[i];
+		size_t j = i - 1;
+
+		while (j >= lo && compare(&a[j], &x) > 0) {
+			a[j + 1] = a[j];
+			j -= 1;
+		}
+		a[j + 1] = x;
+		i += 1;
+	}
+}
+
+static size_t partition(boid a[], size_t lo, size_t hi, comp compare) {
+	size_t center = lo + (hi - lo) / 2;
+
+	median_of_3(&a[lo], &a[center], &a[hi], compare);
+
+	boid pivot = a[center];
+	size_t i = lo - 1;
+	size_t j = hi + 1;
+
+	while (1) {
+		do
+			i += 1;
+		while (compare(&a[i], &pivot) < 0); /* a[i] < pivot */
+		do
+			j -= 1;
+		while (compare(&a[j], &pivot) > 0); /* a[j] > pivot */
+
+		if (i >= j)
+			return j;
+
+		swap(&a[i], &a[j]);
+	}
+}
+
+static void quicksort(boid a[], size_t lo, size_t hi, comp compare) {
+	if (lo >= hi)
+		return;
+	if (lo + 16 >= hi) {
+		insertion_sort(a, lo, hi, compare);
+		return;
+	}
+
+	size_t p = partition(a, lo, hi, compare);
+
+	quicksort(a, lo, p, compare);
+	quicksort(a, p + 1, hi, compare);
+}
+
+/* **** */
+
 static void initialise_boids(const size_t n, boid a[n], int x, int y) {
 	for (size_t i = 0; i < n; ++i) {
 		a[i].pos = (vector){
@@ -58,6 +153,8 @@ void boids_destroy(boids_model *boids) {
 }
 
 void boids_update(screen_t screen, boids_model boids) {
+	quicksort(boids->array, 0, boids->n - 1, compare_x);
+
 	for (size_t i = 0; i < boids->n; ++i) {
 		boid *b = &boids->array[i];
 		int tmp_x = floor(b->pos.x);
