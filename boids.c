@@ -70,7 +70,7 @@ static void insertion_sort(
 		boid x = a[i];
 		size_t j = i - 1;
 
-		while (j >= lo && compare(&a[j], &x) > 0) {
+		while (j >= lo && j <= hi && compare(&a[j], &x) > 0) {
 			a[j + 1] = a[j];
 			j -= 1;
 		}
