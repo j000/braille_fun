@@ -143,7 +143,7 @@ static void initialise_boids(const size_t n, boid a[n], int x, int y) {
 }
 
 boids_model boids_new_model(screen_t screen, unsigned int ilosc) {
-	boids_model boids = calloc(1, sizeof(boids));
+	boids_model boids = calloc(1, sizeof(*boids));
 
 	boids->n = ilosc;
 	boids->array = calloc(boids->n, sizeof(*(boids->array)));
