@@ -37,8 +37,10 @@ int main(int argc, char **argv) {
 
 	boids_model boids = boids_new_model(screen, n);
 
+#if 0
 	screen_show_test(screen);
 	getch();               /* poczekaj na klawisz */
+#endif
 
 	timeout(delay);        /* getch nie blokuje */
 
