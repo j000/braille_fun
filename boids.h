@@ -6,7 +6,7 @@
 
 typedef struct boids_model_s *boids_model;
 
-boids_model boids_new_model(screen_t screen);
+boids_model boids_new_model(screen_t screen, unsigned int ilosc);
 
 void boids_destroy(boids_model *boids);
 

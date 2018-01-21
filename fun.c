@@ -12,7 +12,21 @@
 int main(int argc, char **argv) {
 	/* parametry */
 	bool use_braille = true;
-	int fps = 25;
+	unsigned int fps = 25;
+	unsigned int n = 1600;
+
+	/* **** */
+	if (argc > 1) {
+		char *end = NULL;
+		unsigned int argument = strtoul(argv[1], &end, 0);
+
+		if (*end != '\0') {
+			printf("To nie jest liczba: %s\n", argv[1]);
+			return EXIT_FAILURE;
+		}
+		if (argument != 0 && argument < 10001)
+			n = argument;
+	}
 
 	/* **** */
 	const int delay = floor(1000. / fps);
@@ -21,7 +35,7 @@ int main(int argc, char **argv) {
 
 	screen_t screen = screen_initialise(use_braille);
 
-	boids_model boids = boids_new_model(screen);
+	boids_model boids = boids_new_model(screen, n);
 
 	screen_show_test(screen);
 	getch();               /* poczekaj na klawisz */
