@@ -216,7 +216,7 @@ $(DEPDIR)/%.cpp.d: $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(DEPFLAGS) -MM -MT '$$(OBJDIR)/$*.cpp.o' -o $@
 
 # include generated dependencies
-include $(DEP)
+-include $(wildcard $(DEP))
 
 # depend on directory
 $(OBJ): | $(OBJDIR)
